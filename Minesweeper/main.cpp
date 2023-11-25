@@ -70,8 +70,10 @@ int main() {
 	while (welcomeWindow.isOpen()) { // while the welcome window is active, we do everything below here
 			sf::Event event;
 		while (welcomeWindow.pollEvent(event)) {
-			if (event.type == sf::Event::Closed) // Click X on the window
+			if (event.type == sf::Event::Closed) { // Click X on the window
 				welcomeWindow.close();
+				return 0;
+			}
 			if (event.type == sf::Event::TextEntered) {
 				// check if the key is a letter, accept lowercase and uppercase
 				if ((event.text.unicode > 64 && event.text.unicode < 91) || (event.text.unicode > 96 && event.text.unicode < 123)) {
@@ -90,7 +92,7 @@ int main() {
 				}
 			}
 			if (event.type == sf::Event::KeyPressed) { // Getting user input
-				if (event.key.code == sf::Keyboard::Enter) { // event.key.code == ASCII values
+				if (event.key.code == sf::Keyboard::Enter && name_str.size() > 0) { // event.key.code == ASCII values
 					welcomeWindow.close();
 				}
 				if (event.key.code == sf::Keyboard::Backspace) {
