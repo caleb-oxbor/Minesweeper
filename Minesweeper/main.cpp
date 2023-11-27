@@ -28,7 +28,7 @@ int main() {
 
 
 	// Render window object with dimensions based on number of rows and cols
-	sf::RenderWindow welcomeWindow(sf::VideoMode(cols * 32, (rows * 32) + 100), "Welcome Window");
+	sf::RenderWindow welcomeWindow(sf::VideoMode(cols * 32, (rows * 32) + 100), "Welcome Window", sf::Style::Close);
 	// Creating font object. SFML font objects will use .loadFromFile() function
 	sf::Font font;
 	if (!font.loadFromFile("font.ttf")) {
@@ -111,23 +111,21 @@ int main() {
 		}
 		// Most code will go above this line for this window
 		welcomeWindow.clear(sf::Color::Blue); // Set background color of the window
-		welcomeWindow.draw(welcomeText); // have to draw each object for this specific window
+		welcomeWindow.draw(welcomeText); 
 		welcomeWindow.draw(namePrompt);
 		welcomeWindow.draw(userName);
-		welcomeWindow.display(); // Final
+		welcomeWindow.display();
 	}
 
+	
 
-	//everything below here is still tutorial stuff
-
-
-	// Another text constructor
-	sf::Text text("Welcome to SFML", font, 24);
+	/*sf::Text text("Welcome to SFML", font, 24);
 	text.setFillColor(sf::Color::White); // White text
 	sf::FloatRect textRect = text.getLocalBounds();
-	text.setOrigin(textRect.left + textRect.width / 2.0f, textRect.top +
-		textRect.height / 2.0f);
+	text.setOrigin(textRect.left + textRect.width / 2.0f, textRect.top + textRect.height / 2.0f);
 	text.setPosition(sf::Vector2f(800 / 2.0f, (600 / 2.0f) - 150));
+
+	
 	// Create rectangle object
 	sf::RectangleShape rect1(sf::Vector2f(100, 100));
 	rect1.setFillColor(sf::Color(255, 165, 0));
@@ -136,14 +134,32 @@ int main() {
 	sf::RectangleShape rect2(sf::Vector2f(100, 100));
 	rect2.setFillColor(sf::Color::Blue);
 	rect2.setPosition(rect1.getPosition().x + 200, rect1.getPosition().y); // Getting relative position of the new rect
-		// This is the way we use the texture manager
-		sf::Texture& pokeballTexture = TextureManager::getTexture("Pokeball");
-	sf::Sprite pokeballSprite;
-	pokeballSprite.setTexture(pokeballTexture);
-	pokeballSprite.setScale(0.25, 0.25);
-	pokeballSprite.setOrigin(pokeballTexture.getSize().x / 2.0f, pokeballTexture.getSize()
-		.y / 2.0f);
-	pokeballSprite.setPosition(400, 500);
+	*/
+
+	// game window
+
+	sf::Texture& happyFaceTexture = TextureManager::getTexture("face_happy");
+	sf::Sprite happyFaceSprite;
+	happyFaceSprite.setTexture(happyFaceTexture);
+	happyFaceSprite.setPosition(((cols/2.0f) * 32) - 32, (rows + 0.5) * 32);
+
+	sf::Texture& debugTexture = TextureManager::getTexture("debug");
+	sf::Sprite debugSprite;
+	debugSprite.setTexture(debugTexture);
+	debugSprite.setPosition((cols * 32) - 304, (rows + 0.5) * 32);
+
+	sf::Texture& pauseTexture = TextureManager::getTexture("pause");
+	sf::Texture& playTexture = TextureManager::getTexture("play");
+	sf::Sprite pausePlaySprite;
+	pausePlaySprite.setTexture(pauseTexture);
+	pausePlaySprite.setPosition((cols * 32) - 240, (rows + 0.5) * 32);
+
+	sf::Texture& leaderboardButtonTexture = TextureManager::getTexture("leaderboard");
+	sf::Sprite leaderboardButtonSprite;
+	leaderboardButtonSprite.setTexture(leaderboardButtonTexture);
+	leaderboardButtonSprite.setPosition((cols * 32) - 176, (rows + 0.5) * 32);
+
+	/*
 	sf::Texture& pikachuTexture = TextureManager::getTexture("pikachu");
 	sf::Sprite pikachuSprite;
 	pikachuSprite.setTexture(pikachuTexture);
@@ -153,8 +169,17 @@ int main() {
 	pikachuSprite.setPosition(pokeballSprite.getPosition().x,
 		pokeballSprite.getPosition().y - 69);
 	bool pikachuVisible = false;
-	// Create our main window object
-	sf::RenderWindow window(sf::VideoMode(800, 600), "Kidane Rules");
+	*/
+
+	//make the board based on number of rows and cols
+
+	sf::RenderWindow window(sf::VideoMode(cols * 32, (rows * 32) + 100), "Minesweeper", sf::Style::Close);
+	window.clear(sf::Color::White);
+	window.draw(happyFaceSprite);
+	window.draw(debugSprite);
+	window.draw(pausePlaySprite);
+	window.draw(leaderboardButtonSprite);
+	window.display();
 	while (window.isOpen()) {
 		sf::Event event;
 		while (window.pollEvent(event)) {
@@ -163,10 +188,10 @@ int main() {
 			// Event for when user clicks the mouse
 			if (event.type == sf::Event::MouseButtonPressed) {
 				sf::Vector2i mouse; // 2-dimensional vector of floating point coordinates x, y
-					mouse = sf::Mouse::getPosition(window); // Storing the values of where the event occurred in window
-					std::cout << "Mouse button pressed at X: " << mouse.x;
+				mouse = sf::Mouse::getPosition(window); // Storing the values of where the event occurred in window
+				std::cout << "Mouse button pressed at X: " << mouse.x;
 				std::cout << " Y: " << mouse.y << std::endl;
-				if
+				/*if
 					(rect1.getGlobalBounds().contains(window.mapPixelToCoords(mouse))) {
 					if (rect1.getFillColor() == sf::Color(255, 165, 0))
 						rect1.setFillColor(sf::Color::Blue);
@@ -183,17 +208,19 @@ int main() {
 				// Toggle between pokeball and pikachu
 				if (pokeballSprite.getGlobalBounds().contains(window.mapPixelToCoords(mouse)))
 					pikachuVisible = !pikachuVisible;
+					*/
 			}
+			
 		}
-		window.clear();
-		window.draw(text);
+
+		/*window.draw(text);
 		window.draw(rect1);
 		window.draw(rect2);
 		if (!pikachuVisible)
 			window.draw(pokeballSprite);
 		if (pikachuVisible)
-			window.draw(pikachuSprite);
-		window.display();
+			window.draw(pikachuSprite);*/
+
 	}
 	return 0;
 }
