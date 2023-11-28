@@ -1,6 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include "TextureManager.h"
+#include "tile.h"
 #include <string>
 #include <fstream>
 #include <vector>
@@ -23,7 +24,6 @@ int main() {
 		rows = stoi(token);
 		getline(cFile, token);
 		num_mines = stoi(token);
-
 	}
 
 
@@ -171,15 +171,14 @@ int main() {
 	bool pikachuVisible = false;
 	*/
 
-	//make the board based on number of rows and cols
+	// generate board
+
+	Board board = Board(cols, rows, num_mines);
+
+	//make the game window based on number of rows and cols
 
 	sf::RenderWindow window(sf::VideoMode(cols * 32, (rows * 32) + 100), "Minesweeper", sf::Style::Close);
-	window.clear(sf::Color::White);
-	window.draw(happyFaceSprite);
-	window.draw(debugSprite);
-	window.draw(pausePlaySprite);
-	window.draw(leaderboardButtonSprite);
-	window.display();
+	
 	while (window.isOpen()) {
 		sf::Event event;
 		while (window.pollEvent(event)) {
@@ -220,6 +219,21 @@ int main() {
 			window.draw(pokeballSprite);
 		if (pikachuVisible)
 			window.draw(pikachuSprite);*/
+
+		window.clear(sf::Color::White);
+		window.draw(happyFaceSprite);
+		window.draw(debugSprite);
+		window.draw(pausePlaySprite);
+		window.draw(leaderboardButtonSprite);
+
+		// draw the board
+		for (int i = 0; i < rows; i++) {
+			for (int j = 0; j < cols; j++) {
+				window.draw(board.tiles[i][j].tile_sprite);
+			}
+		}
+
+		window.display();
 
 	}
 	return 0;
