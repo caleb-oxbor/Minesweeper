@@ -190,6 +190,11 @@ int main() {
 				mouse = sf::Mouse::getPosition(window); // Storing the values of where the event occurred in window
 				std::cout << "Mouse button pressed at X: " << mouse.x;
 				std::cout << " Y: " << mouse.y << std::endl;
+
+				if (event.mouseButton.button == sf::Mouse::Right && mouse.y <= rows * 32) {
+					board.tiles[mouse.y / 32][mouse.x / 32].toggle_flag(TextureManager::getTexture("flag"), TextureManager::getTexture("tile_hidden"));
+					
+				}
 				/*if
 					(rect1.getGlobalBounds().contains(window.mapPixelToCoords(mouse))) {
 					if (rect1.getFillColor() == sf::Color(255, 165, 0))
@@ -230,6 +235,8 @@ int main() {
 		for (int i = 0; i < rows; i++) {
 			for (int j = 0; j < cols; j++) {
 				window.draw(board.tiles[i][j].tile_sprite);
+				if (board.tiles[i][j].flagged)
+					window.draw(board.tiles[i][j].flag_sprite);
 			}
 		}
 

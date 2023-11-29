@@ -7,23 +7,29 @@ using namespace std;
 
 struct Tile {
 	sf::Sprite tile_sprite;
+	sf::Sprite flag_sprite;
 	bool hidden;
 	bool has_mine;
+	bool flagged;
 	int x_index;
 	int y_index;
 	Tile* neighbors[8];
 	int neighbor_bombs;
+	sf::FloatRect rect;
 
-	Tile(int col, int row, int total_cols, int total_rows, sf::Texture& image) {
-		tile_sprite.setTexture(image);
+	Tile(int col, int row, int total_cols, int total_rows, sf::Texture& tile, sf::Texture& flag) {
+		tile_sprite.setTexture(tile);
+		flag_sprite.setTexture(flag);
 		hidden = true;
 		has_mine = false;
+		flagged = false;
 		x_index = col;
 		y_index = row;
 
 		// adjust sprite position based on index
 		tile_sprite.setPosition(32 * col, 32 * row);
-		// determine neighbors, nullptr if on edge
+		flag_sprite.setPosition(32 * col, 32 * row);
+		rect = tile_sprite.getLocalBounds();
 
 		if (col == 0) {
 			neighbors[0] = nullptr;
@@ -35,6 +41,11 @@ struct Tile {
 			neighbors[4] = nullptr;
 			neighbors[7] = nullptr;
 		}
+	}
+
+	void toggle_flag(sf::Texture& flag, sf::Texture& no_flag) {
+		if (hidden)
+			flagged = !flagged;
 	}
 
 };
@@ -50,7 +61,7 @@ struct Board {
 			vector<Tile> v;
 			tiles.push_back(v);
 			for (int j = 0; j < cols; j++) {
-				tiles[i].push_back(Tile(j, i, cols, rows, TextureManager::getTexture("tile_hidden")));
+				tiles[i].push_back(Tile(j, i, cols, rows, TextureManager::getTexture("tile_hidden"), TextureManager::getTexture("flag")));
 			}
 		}
 	}
