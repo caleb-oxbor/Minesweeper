@@ -202,6 +202,7 @@ int main() {
 					//trying debug button first, seems fitting
 					if (debugSprite.getGlobalBounds().contains(translated_pos)) {
 						cout << "left clicked debug button!" << endl;
+						board.debug_mode = !board.debug_mode;
 					}
 				}
 				/*if
