@@ -1,10 +1,6 @@
-#include <SFML/Graphics.hpp>
-#include <iostream>
-#include "TextureManager.h"
-#include "tile.h"
+#include "board.h"
 #include <string>
 #include <fstream>
-#include <vector>
 using namespace std;
 
 
