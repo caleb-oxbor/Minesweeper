@@ -10,27 +10,13 @@ struct Board {
 
 	Board(int cols, int rows, int num_bombs);
 
+	void board_draw(sf::RenderWindow& window);
 
+	void assign_neighbors();
 
-	void draw_board(sf::RenderWindow& window) {
-		if (!debug_mode) {
-			for (int i = 0; i < rows; i++) {
-				for (int j = 0; j < cols; j++) {
-					tiles[i][j].draw_tile(window);
-				}
-			}
-		}
-		else {
-			for (int i = 0; i < rows; i++) {
-				for (int j = 0; j < cols; j++) {
-					tiles[i][j].draw_tile(window);
-					if (tiles[i][j].has_mine) {
-						window.draw(tiles[i][j].mine_sprite);
-					}
-				}
-			}
-		}
-	}
+	void board_clear();
+
+	void place_mines();
 
 };
 
@@ -39,6 +25,7 @@ Board::Board(int cols, int rows, int num_bombs) {
 	this->rows = rows;
 	this->num_bombs = num_bombs;
 	debug_mode = false;
+
 
 	// generate board with appropriate dimensions
 
@@ -51,8 +38,62 @@ Board::Board(int cols, int rows, int num_bombs) {
 		}
 	}
 
-	// sprinkle in the mines randomly
-	srand(static_cast<unsigned int>(std::time(nullptr)));
+
+
+}
+
+void Board::board_draw(sf::RenderWindow& window) {
+	for (int i = 0; i < rows; i++) {
+		for (int j = 0; j < cols; j++) {
+			tiles[i][j].tile_draw(window, debug_mode);
+		}
+	}
+}
+
+void Board::assign_neighbors() {
+	for (int i = 0; i < rows; i++) {
+		for (int j = 0; j < cols; j++) {
+			if (tiles[i][j].neighbors[0] != nullptr)
+				tiles[i][j].neighbors[0] = &tiles[i - 1][j - 1];
+			if (tiles[i][j].neighbors[1] != nullptr)
+				tiles[i][j].neighbors[1] = &tiles[i - 1][j];
+			if (tiles[i][j].neighbors[2] != nullptr)
+				tiles[i][j].neighbors[2] = &tiles[i - 1][j + 1];
+			if (tiles[i][j].neighbors[3] != nullptr)
+				tiles[i][j].neighbors[3] = &tiles[i][j - 1];
+			if (tiles[i][j].neighbors[4] != nullptr)
+				tiles[i][j].neighbors[4] = &tiles[i][j + 1];
+			if (tiles[i][j].neighbors[5] != nullptr)
+				tiles[i][j].neighbors[5] = &tiles[i + 1][j - 1];
+			if (tiles[i][j].neighbors[6] != nullptr)
+				tiles[i][j].neighbors[6] = &tiles[i + 1][j];
+			if (tiles[i][j].neighbors[7] != nullptr)
+				tiles[i][j].neighbors[7] = &tiles[i + 1][j + 1];
+
+			tiles[i][j].neighbor_bombs = 0;
+			for (int k = 0; k < 8; k++) {
+				if (tiles[i][j].neighbors[k] != nullptr) {
+					if (tiles[i][j].neighbors[k]->has_mine) {
+						tiles[i][j].neighbor_bombs++;
+					}
+
+				}
+			}
+			// set the tile sprite to display_num
+		}
+	}
+}
+
+void Board::board_clear() {
+	for (int i = 0; i < rows; i++) {
+		for (int j = 0; j < cols; j++) {
+			tiles[i][j].has_mine = false;
+		}
+	}
+}
+
+void Board::place_mines() {
+	srand(static_cast<unsigned int>(time(nullptr)));
 	int mines_placed = 0;
 	int rand_row;
 	int rand_col;
@@ -67,5 +108,4 @@ Board::Board(int cols, int rows, int num_bombs) {
 		}
 
 	}
-
 }

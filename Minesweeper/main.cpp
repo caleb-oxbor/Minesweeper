@@ -172,6 +172,8 @@ int main() {
 	// generate board
 
 	Board board = Board(cols, rows, num_mines);
+	board.place_mines();
+	board.assign_neighbors();
 
 	//make the game window based on number of rows and cols
 
@@ -187,17 +189,21 @@ int main() {
 				sf::Vector2i mouse; // 2-dimensional vector of floating point coordinates x, y
 				mouse = sf::Mouse::getPosition(window); // Storing the values of where the event occurred in window
 				auto translated_pos = window.mapPixelToCoords(mouse);
-				std::cout << "Mouse button pressed at X: " << mouse.x;
-				std::cout << " Y: " << mouse.y << std::endl;
 
 				if (event.mouseButton.button == sf::Mouse::Right && mouse.y <= rows * 32) {
 					board.tiles[mouse.y / 32][mouse.x / 32].toggle_flag(TextureManager::getTexture("flag"), TextureManager::getTexture("tile_hidden"));
-					
 				}
 				if (event.mouseButton.button == sf::Mouse::Left) {
-					//trying debug button first, seems fitting
-					if (debugSprite.getGlobalBounds().contains(translated_pos)) {
-						cout << "left clicked debug button!" << endl;
+					if (mouse.y <= rows * 32) {
+						// cout << "my number should be " << board.tiles[mouse.y / 32][mouse.x / 32].display_num << endl;
+						cout << "my bomb num is " << board.tiles[mouse.y / 32][mouse.x / 32].neighbor_bombs << endl;
+					}
+					if (happyFaceSprite.getGlobalBounds().contains(translated_pos)) {
+						board.board_clear();
+						board.place_mines();
+						board.assign_neighbors();
+					}
+					else if (debugSprite.getGlobalBounds().contains(translated_pos)) {
 						board.debug_mode = !board.debug_mode;
 					}
 				}
@@ -237,8 +243,7 @@ int main() {
 		window.draw(pausePlaySprite);
 		window.draw(leaderboardButtonSprite);
 
-	
-		board.draw_board(window);
+		board.board_draw(window);
 
 		window.display();
 
