@@ -29,21 +29,17 @@ int main() {
 
 	// Render window object with dimensions based on number of rows and cols
 	sf::RenderWindow welcomeWindow(sf::VideoMode(cols * 32, (rows * 32) + 100), "Welcome Window", sf::Style::Close);
-	// Creating font object. SFML font objects will use .loadFromFile() function
 	sf::Font font;
 	if (!font.loadFromFile("font.ttf")) {
 		std::cout << "can't load :(" << std::endl;
 		return 0;
 	}
 
-	// Creating text for welcome screen (3 separate text types)
-
 	// Welcome message
 	sf::Text welcomeText("WELCOME TO MINESWEEPER!", font, 24);
 	welcomeText.setStyle(sf::Text::Bold | sf::Text::Underlined);
 	welcomeText.setFillColor(sf::Color::White);
 	sf::FloatRect welcomeTextRect = welcomeText.getLocalBounds();
-	// Set origin to the center instead of the corner
 	welcomeText.setOrigin(welcomeTextRect.left + welcomeTextRect.width / 2.0f, welcomeTextRect.top + welcomeTextRect.height / 2.0f);
 	welcomeText.setPosition(sf::Vector2f((cols * 32) / 2, (((rows * 32) + 100) / 2) - 150));
 
@@ -66,8 +62,7 @@ int main() {
 	userName.setPosition(sf::Vector2f((cols * 32) / 2, (((rows * 32) + 100) / 2) - 45));
 	string name_str = "";
 
-	// Everything that is updated has to occur in the while loop
-	while (welcomeWindow.isOpen()) { // while the welcome window is active, we do everything below here
+	while (welcomeWindow.isOpen()) {
 			sf::Event event;
 		while (welcomeWindow.pollEvent(event)) {
 			if (event.type == sf::Event::Closed) { // Click X on the window
@@ -83,7 +78,7 @@ int main() {
 					else if (name_str.size() < 10) {
 						name_str += tolower(static_cast<char>(event.text.unicode));
 					}
-
+					// add cursor and recenter
 					userName.setString(name_str + '|');
 					userNameRect = userName.getLocalBounds();
 					userName.setOrigin(userNameRect.left + userNameRect.width / 2.0f, userNameRect.top + userNameRect.height / 2.0f);
@@ -109,8 +104,7 @@ int main() {
 
 			}
 		}
-		// Most code will go above this line for this window
-		welcomeWindow.clear(sf::Color::Blue); // Set background color of the window
+		welcomeWindow.clear(sf::Color::Blue); // Set background color
 		welcomeWindow.draw(welcomeText); 
 		welcomeWindow.draw(namePrompt);
 		welcomeWindow.draw(userName);
@@ -135,6 +129,14 @@ int main() {
 	rect2.setFillColor(sf::Color::Blue);
 	rect2.setPosition(rect1.getPosition().x + 200, rect1.getPosition().y); // Getting relative position of the new rect
 	*/
+
+	// digit configuration, positions are not set
+	sf::Texture& digit_pic = TextureManager::getTexture("digits");
+	sf::Sprite digits[10];
+	for (int i = 0; i < 10; i++) {
+		digits[i].setTexture(digit_pic);
+		digits[i].setTextureRect(sf::IntRect(21 * i, 0, 21, 32));
+	}
 
 	// game window
 
@@ -231,14 +233,7 @@ int main() {
 		window.draw(pausePlaySprite);
 		window.draw(leaderboardButtonSprite);
 
-		/* draw the board
-		for (int i = 0; i < rows; i++) {
-			for (int j = 0; j < cols; j++) {
-				window.draw(board.tiles[i][j].tile_sprite);
-				if (board.tiles[i][j].flagged)
-					window.draw(board.tiles[i][j].flag_sprite);
-			}
-		}*/
+	
 		board.draw_board(window);
 
 		window.display();
