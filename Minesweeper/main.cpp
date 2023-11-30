@@ -231,14 +231,15 @@ int main() {
 		window.draw(pausePlaySprite);
 		window.draw(leaderboardButtonSprite);
 
-		// draw the board
+		/* draw the board
 		for (int i = 0; i < rows; i++) {
 			for (int j = 0; j < cols; j++) {
 				window.draw(board.tiles[i][j].tile_sprite);
 				if (board.tiles[i][j].flagged)
 					window.draw(board.tiles[i][j].flag_sprite);
 			}
-		}
+		}*/
+		board.draw_board(window);
 
 		window.display();
 

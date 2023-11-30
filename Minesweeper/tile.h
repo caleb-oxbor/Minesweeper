@@ -43,12 +43,22 @@ struct Tile {
 		}
 	}
 
+	void draw_tile(sf::RenderWindow& window);
+
+
+
 	void toggle_flag(sf::Texture& flag, sf::Texture& no_flag) {
 		if (hidden)
 			flagged = !flagged;
 	}
 
 };
+
+void Tile::draw_tile(sf::RenderWindow& window) {
+	window.draw(tile_sprite);
+	if (flagged)
+		window.draw(flag_sprite);
+}
 
 struct Board {
 	int cols;
@@ -57,6 +67,9 @@ struct Board {
 	vector<vector<Tile>> tiles;
 
 	Board(int cols, int rows, int num_bombs) {
+		this->cols = cols;
+		this->rows = rows;
+		this->num_bombs = num_bombs;
 		for (int i = 0; i < rows; i++) {
 			vector<Tile> v;
 			tiles.push_back(v);
@@ -66,4 +79,16 @@ struct Board {
 		}
 	}
 
+	void draw_board(sf::RenderWindow& window);
+
+
+
 };
+
+void Board::draw_board(sf::RenderWindow& window) {
+	for (int i = 0; i < rows; i++) {
+		for (int j = 0; j < cols; j++) {
+			tiles[i][j].draw_tile(window);
+		}
+	}
+}
