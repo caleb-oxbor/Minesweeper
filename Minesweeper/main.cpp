@@ -190,12 +190,19 @@ int main() {
 			if (event.type == sf::Event::MouseButtonPressed) {
 				sf::Vector2i mouse; // 2-dimensional vector of floating point coordinates x, y
 				mouse = sf::Mouse::getPosition(window); // Storing the values of where the event occurred in window
+				auto translated_pos = window.mapPixelToCoords(mouse);
 				std::cout << "Mouse button pressed at X: " << mouse.x;
 				std::cout << " Y: " << mouse.y << std::endl;
 
 				if (event.mouseButton.button == sf::Mouse::Right && mouse.y <= rows * 32) {
 					board.tiles[mouse.y / 32][mouse.x / 32].toggle_flag(TextureManager::getTexture("flag"), TextureManager::getTexture("tile_hidden"));
 					
+				}
+				if (event.mouseButton.button == sf::Mouse::Left) {
+					//trying debug button first, seems fitting
+					if (debugSprite.getGlobalBounds().contains(translated_pos)) {
+						cout << "left clicked debug button!" << endl;
+					}
 				}
 				/*if
 					(rect1.getGlobalBounds().contains(window.mapPixelToCoords(mouse))) {
